@@ -222,13 +222,12 @@ Base Path: `/api/v1/physical-gold`
 
 Base Path: `/api/v1/virtual-gold`
 
-| Endpoint             | Method | Description                    |
-| -------------------- | ------ | ------------------------------ |
-| `/`                  | GET    | List all virtual gold holdings |
-| `/{holding_id}`      | GET    | Get holding by ID              |
-| `/user/{user_id}`    | GET    | Holdings of a specific user    |
-| `/buy`               | POST   | Buy virtual gold               |
-| `/sell/{holding_id}` | PUT    | Sell virtual gold              |
+| Endpoint          | Method | Description                    |
+| ----------------- | ------ | ------------------------------ |
+| `/`               | GET    | List all virtual gold holdings |
+| `/{holding_id}`   | GET    | Get holding by ID              |
+| `/user/{user_id}` | GET    | Holdings of a specific user    |
+| `/buy`            | POST   | Buy virtual gold               |
 
 ---
 
