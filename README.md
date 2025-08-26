@@ -127,7 +127,7 @@ Below are some end-points per microservice:
 
 ### 1️⃣ User Service (8101)
 
-Base Path: `/api/v1/users`
+Base Path: `/api/v2/users`
 
 | Endpoint                             | Method | Description                |
 | ------------------------------------ | ------ | -------------------------- |
@@ -141,7 +141,7 @@ Base Path: `/api/v1/users`
 
 ### 2️⃣ Address Service (8102)
 
-Base Path: `/api/v1/address`
+Base Path: `/api/v2/address`
 
 | Endpoint               | Method | Description                      |
 | ---------------------- | ------ | -------------------------------- |
@@ -154,7 +154,7 @@ Base Path: `/api/v1/address`
 
 ### 3️⃣ Vendor Service (8103)
 
-Base Path: `/api/v1/vendors`
+Base Path: `/api/v2/vendors`
 
 | Endpoint              | Method | Description           |
 | --------------------- | ------ | --------------------- |
@@ -167,7 +167,7 @@ Base Path: `/api/v1/vendors`
 
 ### 4️⃣ Vendor Branch Service (8104)
 
-Base Path: `/api/v1/vendor-branches`
+Base Path: `/api/v2/vendor-branches`
 
 | Endpoint              | Method | Description              |
 | --------------------- | ------ | ------------------------ |
@@ -180,7 +180,7 @@ Base Path: `/api/v1/vendor-branches`
 
 ### 5️⃣ Transaction History Service (8105)
 
-Base Path: `/api/v1/transaction-history`
+Base Path: `/api/v2/transaction-history`
 
 | Endpoint              | Method | Description                       |
 | --------------------- | ------ | --------------------------------- |
@@ -194,7 +194,7 @@ Base Path: `/api/v1/transaction-history`
 
 ### 6️⃣ Payments Service (8106)
 
-Base Path: `/api/v1/payments`
+Base Path: `/api/v2/payments`
 
 | Endpoint               | Method | Description            |
 | ---------------------- | ------ | ---------------------- |
@@ -207,7 +207,7 @@ Base Path: `/api/v1/payments`
 
 ### 7️⃣ Physical Gold Transactions Service (8107)
 
-Base Path: `/api/v1/physical-gold`
+Base Path: `/api/v2/physical-gold`
 
 | Endpoint                   | Method | Description                         |
 | -------------------------- | ------ | ----------------------------------- |
@@ -220,7 +220,7 @@ Base Path: `/api/v1/physical-gold`
 
 ### 8️⃣ Virtual Gold Holding Service (8108)
 
-Base Path: `/api/v1/virtual-gold`
+Base Path: `/api/v2/virtual-gold`
 
 | Endpoint          | Method | Description                    |
 | ----------------- | ------ | ------------------------------ |
@@ -238,7 +238,7 @@ Microservices communicate using Feign clients:
 ```java
 @FeignClient(name = "payment-service", url = "http://localhost:8106")
 public interface PaymentFeignClient {
-    @GetMapping("/api/v1/payments")
+    @GetMapping("/api/v2/payments")
     List<PaymentDTO> getAllPayments();
 }
 ```
