@@ -1,0 +1,73 @@
+package com.cg.gold.vendorbranch.utility;
+
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.cg.gold.vendorbranch.exception.VendorBranchException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import feign.FeignException;
+import jakarta.validation.ConstraintViolationException;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+	@Autowired
+	private Environment environment;
+
+	@ExceptionHandler(VendorBranchException.class)
+	public ResponseEntity<ErrorInfo> handleVendorBranchException(VendorBranchException ex) {
+		ErrorInfo errorInfo = new ErrorInfo(environment.getProperty(ex.getMessage()), HttpStatus.NOT_FOUND.value(),
+				LocalDateTime.now());
+		return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(FeignException.class)
+	public ResponseEntity<ErrorInfo> handleFeignException(FeignException ex) {
+		String responseBody = ex.contentUTF8();
+		ErrorInfo errorInfo;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.findAndRegisterModules();
+			errorInfo = mapper.readValue(responseBody, ErrorInfo.class);
+		} catch (Exception e) {
+			errorInfo = new ErrorInfo("Unable to parse error", HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+		}
+		return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler({ MethodArgumentNotValidException.class, ConstraintViolationException.class })
+	public ResponseEntity<ErrorInfo> exceptionHandler(Exception exception) {
+		ErrorInfo errorInfo = new ErrorInfo();
+		errorInfo.setErrorCode(HttpStatus.BAD_REQUEST.value());
+
+		String errorMsg = "";
+		if (exception instanceof MethodArgumentNotValidException ex) {
+			errorMsg = ex.getBindingResult().getAllErrors().stream().map(error -> error.getDefaultMessage())
+					.collect(Collectors.joining(", "));
+		} else if (exception instanceof ConstraintViolationException ex) {
+			errorMsg = ex.getConstraintViolations().stream().map(violation -> violation.getMessage())
+					.collect(Collectors.joining(", "));
+		}
+		errorInfo.setErrorMessage(errorMsg);
+		errorInfo.setTimeStamp(LocalDateTime.now());
+
+		return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ErrorInfo> handleGenericException(Exception ex) {
+		ErrorInfo errorInfo = new ErrorInfo(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
+				LocalDateTime.now());
+		return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+}
