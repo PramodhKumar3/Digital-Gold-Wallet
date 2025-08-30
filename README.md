@@ -231,6 +231,16 @@ Base Path: `/api/v2/virtual-gold`
 
 ---
 
+### 🔗Gold-Wallet-Feign Service (8083)
+
+| Endpoint                                                                | Method | Description                                   |
+| ----------------------------------------------------------------------- | ------ | --------------------------------------------- |
+| `/api/v2/feign/users/search/recent/{days}`                              | GET    | Fetch users created in the last N days        |
+| `/api/v2/feign/users/search/by-city-balance/{city}/{minimum}/{maximum}` | GET    | Get users in a city with wallet balance range |
+| `/api/v2/feign/users/stats/average-balance`                             | GET    | Get average wallet balance grouped by city    |
+
+---
+
 ## 🌐 Feign Clients
 
 Microservices communicate using Feign clients:
@@ -240,6 +250,14 @@ Microservices communicate using Feign clients:
 public interface PaymentFeignClient {
     @GetMapping("/api/v2/payments")
     List<PaymentDTO> getAllPayments();
+}
+```
+
+```java
+@FeignClient("user-service")
+public interface GoldWalletFeignClient {
+    @GetMapping("/api/v2/users")
+    List<User> getAllUsers();
 }
 ```
 
